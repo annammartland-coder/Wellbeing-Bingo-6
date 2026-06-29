@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WELLBEING Bingo - AVEVA</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(160deg,#f5e8ff 0%,#ede0ff 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
+.card {
+  background: white;
+  max-width: 580px;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(92,0,163,0.18);
+}
+.header {
+  background: #3b0070;
+  padding: 16px 20px 14px;
+  text-align: center;
+}
+.header img {
+  height: 42px;
+  width: auto;
+  display: block;
+  margin: 0 auto;
+}
+.title-section {
+  padding: 18px 20px 6px;
+  text-align: center;
+  background: white;
+}
+.title-section img {
+  max-width: 85%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+.bingo-word {
+  font-size: 30px;
+  font-weight: 900;
+  color: #5c00a3;
+  letter-spacing: 3px;
+  margin-top: 2px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5,1fr);
+  gap: 7px;
+  padding: 12px;
+  background: white;
+}
+.tile {
+  position: relative;
+  border: 2.5px solid #5c00a3;
+  border-radius: 13px;
+  min-height: 86px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 7px 5px;
+  cursor: pointer;
+  user-select: none;
+  transition: transform .12s, box-shadow .12s;
+  background: white;
+}
+.tile:hover { transform:scale(1.04); box-shadow:0 4px 14px rgba(92,0,163,.25); }
+.tile:active { transform:scale(0.96); }
+.tile-text { font-size:9.5px; font-weight:700; color:#1a1a1a; line-height:1.35; }
+.ul { text-decoration:underline; }
+.tile.bonus {
+  background: linear-gradient(145deg,#5c00a3 0%,#8b30d9 60%,#a050e8 100%);
+  border-color: #5c00a3;
+}
+.tile.bonus .tile-text { color:white; font-size:15px; font-weight:900; letter-spacing:2px; }
+.overlay {
+  display: none;
+  position: absolute;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(75,0,130,0.88);
+  border-radius: 11px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  animation: popIn .24s cubic-bezier(.34,1.56,.64,1);
+}
+.overlay i { color: white; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+.tile.bonus.completed .overlay { background:rgba(20,0,50,0.65); }
+@keyframes popIn {
+  0%   { transform:scale(.2); opacity:0; }
+  65%  { transform:scale(1.15); }
+  100% { transform:scale(1); opacity:1; }
+}
+.tile.completed .overlay { display:flex; }
+.footer { padding:10px 20px 16px; text-align:center; background:white; }
+.progress { font-size:13px; color:#5c00a3; font-weight:700; margin-bottom:8px; }
+.bar-wrap { background:#e8d5f5; border-radius:10px; height:8px; width:80%; margin:0 auto 10px; overflow:hidden; }
+.bar { height:8px; background:linear-gradient(90deg,#5c00a3,#a050e8); border-radius:10px; transition:width .4s ease; width:0%; }
+.reset-btn {
+  background:#5c00a3; color:white; border:none;
+  padding:8px 28px; border-radius:22px; cursor:pointer;
+  font-size:12px; font-weight:700; letter-spacing:.5px;
+  transition:background .2s, transform .1s;
+}
+.reset-btn:hover { background:#3b0070; }
+.reset-btn:active { transform:scale(.96); }
+.bottom-bar { display:flex; justify-content:space-between; padding:8px 18px 12px; background:white; }
+.accent { width:36px; height:5px; background:#5c00a3; border-radius:3px; }
+.bingo-banner {
+  display:none;
+  background:linear-gradient(90deg,#5c00a3,#a050e8);
+  color:white; text-align:center;
+  padding:10px; font-size:17px; font-weight:900; letter-spacing:2px;
+  animation:slideIn .4s ease;
+}
+@keyframes slideIn {
+  from { opacity:0; transform:translateY(-10px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <img src="https://userdata-d7b62b.stack.tryrelevance.com/conversation/files/658d5031-e82e-4cdf-bbc2-6d1c31a81054.png" alt="AVEVA Logo">
+  </div>
+  <div id="bingoBanner" class="bingo-banner">&#9733; BINGO! All tiles completed! &#9733;</div>
+  <div class="title-section">
+    <img src="https://userdata-d7b62b.stack.tryrelevance.com/conversation/files/748a73cb-7140-4fa0-b3d2-027c83572fae.png" alt="AVEVA Wellbeing Network Logo">
+    <div class="bingo-word">Bingo</div>
+  </div>
+  
+<div class="grid" id="grid">
+
+<div class="tile" onclick="tog(this)"><span class="tile-text">Drink 2L of water</span><div class="overlay"><i class="fa-solid fa-droplet fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Go on a wellbeing walk</span><div class="overlay"><i class="fa-solid fa-person-walking fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Take a break without your phone</span><div class="overlay"><i class="fa-solid fa-mobile-screen fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Do some exercise</span><div class="overlay"><i class="fa-solid fa-dumbbell fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Take a mindful breathing break</span><div class="overlay"><i class="fa-solid fa-wind fa-2x"></i></div></div>
+
+<div class="tile" onclick="tog(this)"><span class="tile-text">Pick up litter on your way to work</span><div class="overlay"><i class="fa-solid fa-trash fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Donate clothes or food</span><div class="overlay"><i class="fa-solid fa-box-open fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Donate something to charity</span><div class="overlay"><i class="fa-solid fa-hand-holding-heart fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Tidy up a shared area</span><div class="overlay"><i class="fa-solid fa-broom fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Put your neighbour’s bins back</span><div class="overlay"><i class="fa-solid fa-recycle fa-2x"></i></div></div>
+
+<div class="tile bonus" onclick="tog(this)"><span class="tile-text">BONUS</span><div class="overlay"><i class="fa-solid fa-trophy fa-2x"></i></div></div>
+
+<div class="tile" onclick="tog(this)"><span class="tile-text">Have lunch with someone new</span><div class="overlay"><i class="fa-solid fa-utensils fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Make someone laugh</span><div class="overlay"><i class="fa-solid fa-face-laugh fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Share a moment of positivity</span><div class="overlay"><i class="fa-solid fa-sun fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Celebrate someone’s success</span><div class="overlay"><i class="fa-solid fa-medal fa-2x"></i></div></div>
+
+<div class="tile" onclick="tog(this)"><span class="tile-text">Recognise someone on MyRecognition</span><div class="overlay"><i class="fa-solid fa-star fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Celebrate a birthday or AVEVAversary</span><div class="overlay"><i class="fa-solid fa-cake-candles fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Complete reflections & gratitude</span><div class="overlay"><i class="fa-solid fa-book fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Share a useful resource</span><div class="overlay"><i class="fa-solid fa-link fa-2x"></i></div></div>
+
+<div class="tile" onclick="tog(this)"><span class="tile-text">Recommend an uplifting book or song</span><div class="overlay"><i class="fa-solid fa-music fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Bring someone a snack</span><div class="overlay"><i class="fa-solid fa-cookie-bite fa-2x"></i></div></div>
+<div class="tile" onclick="tog(this)"><span class="tile-text">Share a recommendation</span><div class="overlay"><i class="fa-solid fa-thumbs-up fa-2x"></i></div></div>
+
+</div>
+  <div class="footer">
+    <div class="progress" id="prog">0 / 25 tiles completed</div>
+    <div class="bar-wrap"><div class="bar" id="bar"></div></div>
+    <button class="reset-btn" onclick="resetAll()">Reset All</button>
+  </div>
+  <div class="bottom-bar"><div class="accent"></div><div class="accent"></div></div>
+</div>
+<script>
+function tog(tile) {
+  tile.classList.toggle("completed");
+  upd();
+}
+function upd() {
+  var tiles = document.querySelectorAll(".tile");
+  var done = document.querySelectorAll(".tile.completed").length;
+  var total = tiles.length;
+  var pct = Math.round((done/total)*100);
+  document.getElementById("bar").style.width = pct + "%";
+  if (done === total) {
+    document.getElementById("prog").textContent = "All " + total + " tiles completed!";
+    document.getElementById("bingoBanner").style.display = "block";
+  } else {
+    document.getElementById("prog").textContent = done + " / " + total + " tiles completed";
+    document.getElementById("bingoBanner").style.display = "none";
+  }
+}
+function resetAll() {
+  document.querySelectorAll(".tile.completed").forEach(function(t){ t.classList.remove("completed"); });
+  upd();
+}
+</script>
+</body>
+</html>
